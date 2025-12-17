@@ -3,13 +3,13 @@ import 'package:http/http.dart' as http;
 import '../models/buildings.dart';
 
 class BuildingService {
-  static const String _baseUrl = 'http://10.0.2.2:3000';
+  static const String _baseUrl = 'https://projecte-de-innovacio.onrender.com';
 
   Future<List<Buildings>> getBuildings({int page = 1}) async {
     try {
       final url = Uri.parse('$_baseUrl/buildings/api/list?page=$page');
 
-      print("📞 Llamando a la API: $url");
+      print(" Llamando a la API: $url");
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
