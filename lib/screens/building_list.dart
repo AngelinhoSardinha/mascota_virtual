@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import '../models/buildings.dart'; // Tu modelo
+import '../models/buildings.dart';
+import 'building_detail.dart'; // 👈 1. ¡IMPORTANTE! Importa la pantalla de detalle
 
 class ListaEdificacionesScreen extends StatefulWidget {
   const ListaEdificacionesScreen({super.key});
@@ -13,24 +14,20 @@ class ListaEdificacionesScreen extends StatefulWidget {
 class _ListaEdificacionesScreenState extends State<ListaEdificacionesScreen> {
   final _supabase = Supabase.instance.client;
 
-  // 1. VARIABLES PARA LA PAGINACIÓN
   final ScrollController _scrollController = ScrollController();
-  final List<Buildings> _edificios = []; // Lista donde acumulamos los datos
-  bool _cargando = false; // Para saber si estamos bajando datos
-  bool _todoCargado = false; // Para saber si ya llegamos al final de la tabla
-  final int _cantidadPorPagina = 10; // Traemos de 10 en 10
+  final List<Buildings> _edificios = [];
+  bool _cargando = false;
+  bool _todoCargado = false;
+  final int _cantidadPorPagina = 10;
 
   @override
   void initState() {
     super.initState();
-    _cargarMasEdificios(); // Carga inicial
+    _cargarMasEdificios();
 
-    // 2. ESCUCHAMOS EL SCROLL
     _scrollController.addListener(() {
-      // Si llegamos al fondo (menos 200px)...
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
-        // ...y no estamos ocupados cargando ni hemos terminado...
         if (!_cargando && !_todoCargado) {
           _cargarMasEdificios();
         }
@@ -40,34 +37,33 @@ class _ListaEdificacionesScreenState extends State<ListaEdificacionesScreen> {
 
   @override
   void dispose() {
-    _scrollController.dispose(); // Limpieza al salir
+    _scrollController.dispose();
     super.dispose();
   }
 
-  // 3. FUNCIÓN PARA PEDIR DATOS POR TROCITOS
   Future<void> _cargarMasEdificios() async {
-    if (_cargando) return; // Si ya está cargando, no hacemos nada
+    if (_cargando) return;
     setState(() => _cargando = true);
 
     try {
       final inicio = _edificios.length;
       final fin = inicio + _cantidadPorPagina - 1;
 
-      // Pedimos el rango específico a Supabase
       final response = await _supabase
-          .from('edificaciones')
+          .from('buildings')
           .select()
           .range(inicio, fin)
-          .order('id'); // Importante ordenar siempre igual
+          .order(
+            'id_building',
+            ascending: true,
+          ); // Recuerda usar id_building 😉
 
-      // Convertimos a tu modelo Buildings
       final nuevosEdificios = (response as List)
           .map((mapa) => Buildings.fromMap(mapa))
           .toList();
 
       setState(() {
         _edificios.addAll(nuevosEdificios);
-        // Si llegaron menos de los que pedimos, es que se acabó la lista
         if (nuevosEdificios.length < _cantidadPorPagina) {
           _todoCargado = true;
         }
@@ -86,15 +82,12 @@ class _ListaEdificacionesScreenState extends State<ListaEdificacionesScreen> {
         title: const Text("Mis Edificios 🏗️"),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      // 4. LISTA INTELIGENTE
       body: _edificios.isEmpty && _cargando
-          ? const Center(child: CircularProgressIndicator()) // Loading inicial
+          ? const Center(child: CircularProgressIndicator())
           : ListView.builder(
-              controller: _scrollController, // Conectamos el "ojo" del scroll
-              // Sumamos 1 si aún hay más datos (para el spinner de abajo)
+              controller: _scrollController,
               itemCount: _edificios.length + (_todoCargado ? 0 : 1),
               itemBuilder: (context, index) {
-                // Si es el último ítem y aún falta data, mostramos spinner
                 if (index == _edificios.length) {
                   return const Padding(
                     padding: EdgeInsets.all(20.0),
@@ -112,10 +105,28 @@ class _ListaEdificacionesScreenState extends State<ListaEdificacionesScreen> {
                       color: Colors.deepPurple,
                     ),
                     title: Text(
-                      edificio.name, // Usando tu modelo
+                      edificio.name,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
-                    subtitle: Text(edificio.location), // Usando tu modelo
+                    subtitle: Text(edificio.location),
+
+                    // 👇👇👇 2. ¡AQUÍ ESTÁ EL ONTAP! 👇👇👇
+                    trailing: const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 16,
+                    ), // Flechita decorativa
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          // Aquí "empujamos" la nueva pantalla y le damos el edificio
+                          builder: (context) =>
+                              BuildingDetailScreen(building: edificio),
+                        ),
+                      );
+                    },
+
+                    // 👆👆👆 FIN DEL ONTAP 👆👆👆
                   ),
                 );
               },
