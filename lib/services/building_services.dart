@@ -3,16 +3,11 @@ import 'package:http/http.dart' as http;
 import '../models/buildings.dart';
 
 class BuildingService {
-  // ⚠️ IMPORTANTE:
-  // Si usas Emulador Android: 'http://10.0.2.2:3000'
-  // Si usas iOS o Web: 'http://localhost:3000'
-  // Si usas móvil físico: La IP de tu PC (ej: 'http://192.168.1.35:3000')
   static const String _baseUrl = 'http://10.0.2.2:3000';
 
   Future<List<Buildings>> getBuildings({int page = 1}) async {
     try {
-      // Aquí usamos el truco del "?format=json" que te expliqué antes 😉
-      final url = Uri.parse('$_baseUrl/buildings?format=json&page=$page');
+      final url = Uri.parse('$_baseUrl/buildings/api/list?page=$page');
 
       print("📞 Llamando a la API: $url");
       final response = await http.get(url);
