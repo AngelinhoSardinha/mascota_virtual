@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/buildings.dart';
-import 'building_detail.dart'; // 👈 1. ¡IMPORTANTE! Importa la pantalla de detalle
+import 'building_detail.dart';
 
 class ListaEdificacionesScreen extends StatefulWidget {
   const ListaEdificacionesScreen({super.key});
@@ -53,10 +53,7 @@ class _ListaEdificacionesScreenState extends State<ListaEdificacionesScreen> {
           .from('buildings')
           .select()
           .range(inicio, fin)
-          .order(
-            'id_building',
-            ascending: true,
-          ); // Recuerda usar id_building 😉
+          .order('id_building', ascending: true);
 
       final nuevosEdificios = (response as List)
           .map((mapa) => Buildings.fromMap(mapa))
@@ -109,24 +106,16 @@ class _ListaEdificacionesScreenState extends State<ListaEdificacionesScreen> {
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(edificio.location),
-
-                    // 👇👇👇 2. ¡AQUÍ ESTÁ EL ONTAP! 👇👇👇
-                    trailing: const Icon(
-                      Icons.arrow_forward_ios,
-                      size: 16,
-                    ), // Flechita decorativa
+                    trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          // Aquí "empujamos" la nueva pantalla y le damos el edificio
                           builder: (context) =>
                               BuildingDetailScreen(building: edificio),
                         ),
                       );
                     },
-
-                    // 👆👆👆 FIN DEL ONTAP 👆👆👆
                   ),
                 );
               },

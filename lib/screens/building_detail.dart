@@ -11,7 +11,7 @@ class BuildingDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(building.name), // Título con el nombre del edificio
+        title: Text(building.name),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: SingleChildScrollView(
@@ -19,7 +19,6 @@ class BuildingDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // --- ENCABEZADO: FOTO (ICONO) Y ESTADO ---
             Center(
               child: Column(
                 children: [
@@ -29,7 +28,7 @@ class BuildingDetailScreen extends StatelessWidget {
                     color: Colors.deepPurple,
                   ),
                   const SizedBox(height: 10),
-                  // Mostramos si está validado o no con un chip bonito
+                  // Mostramos si está validado o no con un chip
                   Chip(
                     label: Text(
                       building.validate
@@ -50,9 +49,7 @@ class BuildingDetailScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             const Divider(),
-
-            // --- SECCIÓN 1: DATOS PRINCIPALES ---
-            _crearTituloSeccion("📍 Información General"),
+            _crearTituloSeccion("Información General"),
             _crearDato("Ubicación", building.location, Icons.location_on),
             _crearDato(
               "Año Construcción",
@@ -62,9 +59,7 @@ class BuildingDetailScreen extends StatelessWidget {
             _crearDato("Coordenadas", building.coordinates, Icons.map),
 
             const Divider(),
-
-            // --- SECCIÓN 2: DETALLES TÉCNICOS ---
-            _crearTituloSeccion("📏 Detalles Técnicos"),
+            _crearTituloSeccion(" Detalles Técnicos"),
             _crearDato(
               "Superficie",
               "${building.surface_area} m²",
@@ -82,17 +77,15 @@ class BuildingDetailScreen extends StatelessWidget {
             ),
 
             const Divider(),
-
-            // --- SECCIÓN 3: DESCRIPCIÓN ---
-            _crearTituloSeccion("📝 Descripción"),
+            _crearTituloSeccion("Descripción"),
             Padding(
               padding: const EdgeInsets.symmetric(
                 vertical: 8.0,
                 horizontal: 16.0,
               ),
               child: Text(
-                building.descripction.isNotEmpty
-                    ? building.descripction
+                building.description.isNotEmpty
+                    ? building.description
                     : "Sin descripción disponible.",
                 style: const TextStyle(fontSize: 16, height: 1.5),
                 textAlign: TextAlign.justify,

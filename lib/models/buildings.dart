@@ -3,7 +3,7 @@ class Buildings {
   final String name;
   final String location;
   final int construction_year;
-  final String descripction;
+  final String description;
   final int surface_area;
   final int id_typology;
   final int id_protection;
@@ -15,7 +15,7 @@ class Buildings {
     required this.name,
     required this.location,
     required this.construction_year,
-    required this.descripction,
+    required this.description,
     required this.surface_area,
     required this.id_typology,
     required this.id_protection,
@@ -30,7 +30,7 @@ class Buildings {
       name: map['name'] ?? 'Sin nombre',
       location: map['location'] ?? 'Sin ubicación',
       construction_year: map['construction_year'] ?? 0,
-      descripction: map['descripction'] ?? 'Sin descripción',
+      description: map['description'] ?? 'Sin descripción',
       surface_area: map['surface_area'] ?? 0,
       id_typology: map['id_typology'] ?? 0,
       id_protection: map['id_protection'] ?? 0,
@@ -45,7 +45,7 @@ class Buildings {
       'nombre': name,
       'ubicacion': location,
       'construction_year': construction_year,
-      'descripction': descripction,
+      'descripction': description,
       'surface_area': surface_area,
       'id_typology': id_typology,
       'id_protection': id_protection,
